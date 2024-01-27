@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+.DS_Store   # for macOS users
+.env        # if you have environment variables in a .env file
+instance/   # if you're using Flask's instance folders
+*.db        # if you have a local database file you don't want to push

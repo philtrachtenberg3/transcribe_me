@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Translation App</title>
+</head>
+<body>
+    <h1>Translation App</h1>
+    <form action="/" method="POST">
+        <label for="text">Enter Text:</label>
+        <input type="text" id="text" name="text">
+        <input type="submit" value="Translate">
+    </form>
+    {% if translated_text %}
+        <h2>Translated Text:</h2>
+        <p>{{ translated_text }}</p>
+    {% endif %}
+</body>
+</html>

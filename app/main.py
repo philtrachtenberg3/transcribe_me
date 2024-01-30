@@ -1,12 +1,13 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from google.cloud import speech, translate_v2 as translate
 import os
+import subprocess
+import uuid
+import io
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\philt\Secrets\translation-app-412508-9dd52cf18013.json"
 
 app = Flask(__name__)
-
-# Configure this environment variable in your operating system
-# or define it before running the Flask app
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\philt\Secrets\client_secret_408217728727-cojkas93hrrh997j06ng6sgim6a6jmrl.apps.googleusercontent.com (1).json"
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -14,51 +15,62 @@ def index():
         # Check if an audio file is in the POST request
         if 'audio_file' in request.files:
             audio_file = request.files['audio_file']
-            # Here you would usually save the file and then process it
-            # For simplicity, let's assume we're sending it directly to the Speech-to-Text API
-            
-            # Transcribe audio file
-            transcribed_text = transcribe_audio(audio_file)
-            
-            # Translate text
-            translated_text = translate_text(transcribed_text)
-            
-            return render_template('index.html', translated_text=translated_text)
-    else:
-        return render_template('index.html')
+            if audio_file.filename.endswith('.mp4'):
+                # Process the MP4 file
+                audio_path = extract_audio_from_video(audio_file)
+                if audio_path:
+                    transcribed_text = transcribe_audio(audio_path)
+                    translated_text = translate_text(transcribed_text)
+                    # Clean up temporary audio file
+                    os.remove(audio_path)
+                else:
+                    return jsonify({'error': 'Audio extraction failed.'})
+            else:
+                # Process the audio file directly
+                audio_blob = audio_file.read()
+                transcribed_text = transcribe_audio(audio_blob)
+                translated_text = translate_text(transcribed_text)
 
-def transcribe_audio(audio_file):
-    # Initialize the Google Cloud Speech client
-    client = speech.SpeechClient()
-
-    # TODO: Process the audio file as needed for Google Speech-to-Text
-    # For example, you might need to convert it to the proper format (e.g., FLAC)
-
-    # Now, let's assume the audio file is in the proper format
-    audio_content = audio_file.read()
-    audio = speech.RecognitionAudio(content=audio_content)
+            return jsonify({'translated_text': translated_text})
     
+    return render_template('index.html')
+
+def extract_audio_from_video(video_file):
+    unique_filename = str(uuid.uuid4())
+    video_path = f'temp_{unique_filename}.mp4'
+    audio_path = f'temp_{unique_filename}.mp3'
+
+    video_file.save(video_path)
+
+    # Use ffmpeg to extract audio
+    command = ['ffmpeg', '-i', video_path, '-q:a', '0', '-map', 'a', audio_path, '-y']
+    subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    # Remove the video file after extracting the audio
+    os.remove(video_path)
+
+    return audio_path if os.path.exists(audio_path) else None
+
+def transcribe_audio(audio_content):
+    # Assumes `audio_content` is the path to the audio file
+    with io.open(audio_content, 'rb') as audio_file:
+        content = audio_file.read()
+
+    client = speech.SpeechClient()
+    audio = speech.RecognitionAudio(content=content)
     config = speech.RecognitionConfig(
-        # You will need to determine the appropriate encoding and sample rate for your audio file
-        encoding=speech.RecognitionConfig.AudioEncoding.FLAC,
+        encoding=speech.RecognitionConfig.AudioEncoding.MP3,
         sample_rate_hertz=44100,
-        language_code="en-US",  # Change to the appropriate language of the audio
+        language_code='en-US',
     )
 
-    # Detects speech in the audio file
     response = client.recognize(config=config, audio=audio)
-    
-    # Just for simplicity, returning the first result here
-    return response.results[0].alternatives[0].transcript if response.results else ''
+    transcription = ' '.join(result.alternatives[0].transcript for result in response.results) if response.results else ''
+    return transcription
 
 def translate_text(text):
-    # Initialize the translation client
     translate_client = translate.Client()
-
-    # Translate the text
     result = translate_client.translate(text, target_language='en')
-    
-    # Return the translated text
     return result['translatedText']
 
 if __name__ == "__main__":

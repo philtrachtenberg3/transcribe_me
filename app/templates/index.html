@@ -10,5 +10,10 @@
         <input type="file" name="image_file">
         <input type="submit" value="Upload">
     </form>
+
+    {% if translated_text %}
+        <h2>Translated Text:</h2>
+        <p>{{ translated_text }}</p>
+    {% endif %}
 </body>
 </html>

@@ -8,6 +8,9 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    # Initialize translated_text at the beginning of the function
+    translated_text = ""
+
     if request.method == 'POST':
         if 'image_file' in request.files:
             image_file = request.files['image_file']
@@ -18,11 +21,10 @@ def index():
             if detected_text:
                 # Translate the detected text
                 translated_text = translate_text(detected_text)
-                return jsonify({'translated_text': translated_text})
-            else:
-                return jsonify({'error': 'No text detected in the image.'})
     
-    return render_template('index.html')
+    # Now translated_text is always defined, so it's safe to use it here
+    return render_template('index.html', translated_text=translated_text)
+
 
 def detect_text_in_image(image_file):
     client = vision.ImageAnnotatorClient()

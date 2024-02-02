@@ -8,9 +8,8 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    # Initialize translated_text at the beginning of the function
     translated_text = ""
-
+    detected_lang = ""
     if request.method == 'POST':
         if 'image_file' in request.files:
             image_file = request.files['image_file']
@@ -19,11 +18,15 @@ def index():
             detected_text = detect_text_in_image(image_file)
             
             if detected_text:
-                # Translate the detected text
-                translated_text = translate_text(detected_text)
+                # Translate the detected text and get the detected language code
+                detected_lang_code, translated_text = translate_text(detected_text)
+                
+                # Convert the language code to a language name
+                detected_lang = get_language_name(detected_lang_code)
     
-    # Now translated_text is always defined, so it's safe to use it here
-    return render_template('index.html', translated_text=translated_text)
+    return render_template('index.html', translated_text=translated_text, detected_lang=detected_lang)
+
+
 
 
 def detect_text_in_image(image_file):
@@ -43,8 +46,29 @@ def detect_text_in_image(image_file):
 
 def translate_text(text):
     translate_client = translate.Client()
+
+    # Detect the language of the text
+    detection = translate_client.detect_language(text)
+    lang = detection['language']
+
+    # Translate the text
     result = translate_client.translate(text, target_language='en')
-    return result['translatedText']
+
+    # Return both the detected language and the translated text
+    return lang, result['translatedText']
+
+def get_language_name(lang_code):
+    # Map of language codes to language names
+    language_codes = {
+        'iw': 'Hebrew',
+        'en': 'English',
+        'es': 'Spanish',
+        # Add more mappings as needed
+    }
+    # Return the language name or the original code if not found
+    return language_codes.get(lang_code, lang_code)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

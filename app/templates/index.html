@@ -21,6 +21,7 @@
         {% if translated_text %}
             <div class="alert alert-success" role="alert">
                 <h4 class="alert-heading">Translated Text:</h4>
+                <h3 class="alert-heading mb-3">Detected Language: <span class="badge badge-secondary">{{ detected_lang }}</span></h3>
                 <p>{{ translated_text }}</p>
             </div>
         {% endif %}

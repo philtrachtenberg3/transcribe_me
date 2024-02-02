@@ -1,32 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Translation App</title>
+    <meta charset="UTF-8">
+    <title>Image Translation App</title>
 </head>
 <body>
-    <h1>Translation App</h1>
-    <form id="upload-form" method="POST" enctype="multipart/form-data">
-        <label>Upload audio file:</label>
-        <input type="file" name="audio_file">
-        <input type="button" value="Upload" onclick="uploadFile()">
+    <h1>Upload an image to translate text</h1>
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <input type="file" name="image_file">
+        <input type="submit" value="Upload">
     </form>
-    <div id="translation"></div>
-
-    <script>
-        function uploadFile() {
-            var form = document.getElementById('upload-form');
-            var formData = new FormData(form);
-
-            fetch('/', {
-                method: 'POST',
-                body: formData
-            }).then(response => response.json())
-            .then(data => {
-                document.getElementById('translation').textContent = data.translated_text;
-            }).catch(error => {
-                console.error('Error:', error);
-            });
-        }
-    </script>
 </body>
 </html>

@@ -9,7 +9,8 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     translated_text = ""
-    detected_lang = ""
+    detected_lang_name = ""  # Initialize the detected language name variable
+    detected_text = ""  # Initialize the variable for the original text
     if request.method == 'POST':
         if 'image_file' in request.files:
             image_file = request.files['image_file']
@@ -21,10 +22,13 @@ def index():
                 # Translate the detected text and get the detected language code
                 detected_lang_code, translated_text = translate_text(detected_text)
                 
-                # Convert the language code to a language name
-                detected_lang = get_language_name(detected_lang_code)
+                # Use the get_language_name function to get the language name from the code
+                detected_lang_name = get_language_name(detected_lang_code)
     
-    return render_template('index.html', translated_text=translated_text, detected_lang=detected_lang)
+    # Pass the original text, translated text, and detected language name to the template
+    return render_template('index.html', detected_text=detected_text, translated_text=translated_text, detected_lang=detected_lang_name)
+
+
 
 
 

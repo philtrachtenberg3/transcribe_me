@@ -18,10 +18,16 @@
             <button type="submit" class="btn btn-primary">Upload</button>
         </form>
 
+        {% if detected_text %}
+            <div class="alert alert-info" role="alert">
+                <h4 class="alert-heading">Original Text:</h4>
+                <p>{{ detected_text }}</p>
+            </div>
+        {% endif %}
+
         {% if translated_text %}
             <div class="alert alert-success" role="alert">
-                <h4 class="alert-heading">Translated Text:</h4>
-                <h3 class="alert-heading mb-3">Detected Language: <span class="badge badge-secondary">{{ detected_lang }}</span></h3>
+                <h3 class="alert-heading">Detected Language: <span class="badge badge-secondary">{{ detected_lang }}</span></h3>
                 <p>{{ translated_text }}</p>
             </div>
         {% endif %}

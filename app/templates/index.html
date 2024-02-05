@@ -6,6 +6,7 @@
     <title>Image Translation App</title>
     <!-- Include Bootstrap CSS from CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/styles.css">
 </head>
 <body>
     <div class="container mt-5">
@@ -45,5 +46,9 @@
             $(this).next('.custom-file-label').html(fileName);
         });
     </script>
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Disclaimer</h4>
+        <p>This application uses Google Cloud Translate and Google Vision and may not provide a 100% accurate translation.</p>
+    </div>
 </body>
 </html>

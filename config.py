@@ -1,11 +1,14 @@
 import os
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'your_secret_key'
-    GOOGLE_CLOUD_PROJECT = os.environ.get('GOOGLE_CLOUD_PROJECT') or 'your_project_id'
+    # Environment variables are used to configure the application.
+    # The 'or' fallbacks can be defaults or None if you want to enforce the setting via environment variables.
     
-    # Google Cloud Vision API settings
-    GOOGLE_CLOUD_VISION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+    # Secret Key for Flask application, necessary for session management, CSRF protection, etc.
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    
+    # Google Cloud Project ID
+    GOOGLE_CLOUD_PROJECT = os.environ.get('GOOGLE_CLOUD_PROJECT')
 
-    # Google Cloud Translate API settings
-    GOOGLE_CLOUD_TRANSLATE_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+    # Any other configuration variables can be added here as needed, for example:
+    # DATABASE_URI = os.environ.get('DATABASE_URI') or 'sqlite:///default.db'

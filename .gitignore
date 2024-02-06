@@ -7,4 +7,3 @@ instance/   # if you're using Flask's instance folders
 *.db        # if you have a local database file you don't want to push
 app.yaml
 config.py
-

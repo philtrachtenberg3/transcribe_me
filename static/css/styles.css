@@ -2,4 +2,12 @@
     position: absolute;
     bottom: 0;
     width: 100%;
+    margin-top: 20px; /* Add some space above the disclaimer */
+}
+
+@media (max-width: 768px) { /* Adjusts for devices with width less than 768px */
+    .alert-warning {
+        font-size: 14px; /* Smaller font size on smaller screens */
+        padding: 10px; /* Adjust padding to reduce space */
+    }
 }

@@ -48,9 +48,25 @@ def translate_text(text, lang_code):
     return get_language_name(lang_code), result['translatedText']
 
 def get_language_name(lang_code):
-    # Implement this function based on your requirements
-    # It should return the language name given a language code
-    pass
+    # Dictionary mapping language codes to their full names
+    language_codes = {
+        'en': 'English',
+        'es': 'Spanish',
+        'fr': 'French',
+        'de': 'German',
+        'it': 'Italian',
+        'pt': 'Portuguese',
+        'ar': 'Arabic',
+        'zh': 'Chinese',
+        'ja': 'Japanese',
+        'ru': 'Russian',
+        'he': 'Hebrew',
+        # Add more language codes and names as needed
+    }
+
+    # Return the full language name or a default string if the code is not found
+    return language_codes.get(lang_code, "Unknown Language")
+
 
 if __name__ == "__main__":
     app.run(debug=True)

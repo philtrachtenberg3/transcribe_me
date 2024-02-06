@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, request
 from google.cloud import vision
 from google.cloud import translate_v2 as translate  # Consider updating to v3
+import pycountry
 
 # Initialize Flask app
 app = Flask(__name__, template_folder='app/templates')
@@ -48,24 +49,18 @@ def translate_text(text, lang_code):
     return get_language_name(lang_code), result['translatedText']
 
 def get_language_name(lang_code):
-    # Dictionary mapping language codes to their full names
-    language_codes = {
-        'en': 'English',
-        'es': 'Spanish',
-        'fr': 'French',
-        'de': 'German',
-        'it': 'Italian',
-        'pt': 'Portuguese',
-        'ar': 'Arabic',
-        'zh': 'Chinese',
-        'ja': 'Japanese',
-        'ru': 'Russian',
-        'he': 'Hebrew',
-        # Add more language codes and names as needed
-    }
+    # Map for special cases like Hebrew
+    special_cases = {"iw": "he"}
+    # Check if the provided code is in the special cases
+    lang_code = special_cases.get(lang_code, lang_code)
 
-    # Return the full language name or a default string if the code is not found
-    return language_codes.get(lang_code, "Unknown Language")
+    try:
+        # Use pycountry to get the language from the ISO 639-1/2T/2B/3 codes
+        language = pycountry.languages.get(alpha_2=lang_code) or pycountry.languages.get(alpha_3=lang_code)
+        return language.name
+    except AttributeError:
+        # If the language code is not found, return a default string
+        return "Unknown Language"
 
 
 if __name__ == "__main__":

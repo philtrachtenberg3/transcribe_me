@@ -4,7 +4,7 @@ from google.cloud import vision
 from google.cloud import translate_v2 as translate  # Consider updating to v3
 
 # Initialize Flask app
-app = Flask(__name__)
+app = Flask(__name__, template_folder='app/templates')
 
 # Create client instances
 vision_client = vision.ImageAnnotatorClient()

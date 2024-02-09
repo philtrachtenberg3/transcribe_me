@@ -27,14 +27,14 @@
         </form>
 
         {% if detected_text %}
-            <div class="alert alert-info" role="alert">
+            <div class="alert alert-info shadow-sm" role="alert">
                 <h4 class="alert-heading">Original Text:</h4>
                 <p>{{ detected_text }}</p>
             </div>
         {% endif %}
 
         {% if translated_text %}
-            <div class="alert alert-success mb-4" role="alert">
+            <div class="alert alert-success shadow mb-4" role="alert">
                 <h3 class="alert-heading">Detected Language: <span class="badge badge-secondary">{{ detected_lang }}</span></h3>
                 <p>{{ translated_text }}</p>
             </div>
@@ -54,7 +54,7 @@
         });
     </script>
     <footer>
-        <div class="alert alert-warning" role="alert">
+        <div class="alert alert-warning shadow-none" role="alert">
             <h5 class="alert-heading">Disclaimer</h5>
             <p>This application uses Google Cloud Translate and Google Vision and may not provide a 100% accurate translation.</p>
         </div>

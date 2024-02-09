@@ -43,15 +43,12 @@ header .container {
     margin-top: 2rem;
 }
   
-  /* Sticky footer */
-  footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+/* Ensure the footer does not have a fixed position */
+footer {
     background-color: #f5f5f5;
-    padding: 5px 0;
+    padding: 10px 0;
     text-align: center;
-  }
+}
   
   /* Media query for smaller devices */
   @media (max-width: 768px) {
